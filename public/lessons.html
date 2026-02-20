@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lessons - Context Layer Accelerator</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lessons.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="/" class="back-link">← Dashboard</a>
+      <h1>📚 Lessons</h1>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-value" id="xp">0</span>
+        <span class="stat-label">XP</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="streak">🔥 0</span>
+        <span class="stat-label">Streak</span>
+      </div>
+    </div>
+
+    <div id="whatsNext" class="whats-next">
+      <!-- Filled by JS -->
+    </div>
+
+    <div id="lessonList" class="lesson-list">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Lesson Modal -->
+    <div id="lessonModal" class="modal hidden">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeLesson()">&times;</button>
+        <div id="lessonContent">
+          <!-- Lesson content here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div id="completionModal" class="modal hidden">
+      <div class="modal-content completion">
+        <div class="confetti">🎉</div>
+        <h2>Lesson Complete!</h2>
+        <p class="xp-gained">+<span id="xpGained">100</span> XP</p>
+        <p class="badge-earned">Badge: <span id="badgeEarned">🗺️</span></p>
+        <button class="btn btn-primary" onclick="closeCompletion()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="lessons.js"></script>
+</body>
+</html>

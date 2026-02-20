@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Layer Accelerator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧠 Context Layer Accelerator</h1>
+      <p class="subtitle">Build a personal context layer for AI</p>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-value" id="xp">0</span>
+        <span class="stat-label">XP</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="streak">🔥 0</span>
+        <span class="stat-label">Streak</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="progress">0/6</span>
+        <span class="stat-label">Lessons</span>
+      </div>
+    </div>
+
+    <div class="next-lesson-card" id="nextLessonCard">
+      <h2>🎯 Continue Learning</h2>
+      <div class="next-lesson" id="nextLesson">
+        Loading...
+      </div>
+      <a href="lessons.html" class="btn btn-primary">Start Learning →</a>
+    </div>
+
+    <div class="overview">
+      <h2>📚 Learning Path</h2>
+      <div class="path">
+        <div class="tier">
+          <h3>🏗️ Foundation (Lessons 1-5)</h3>
+          <p>Build the core: embeddings, search, clustering, recommendations, RAG</p>
+        </div>
+        <div class="tier">
+          <h3>🔌 Integration (Lesson 6)</h3>
+          <p>Connect to Claude via MCP—your context layer goes universal</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-estimate">
+      <h2>⏱️ Time Investment</h2>
+      <p><strong>~10 hours total</strong> at your 10 hrs/week pace</p>
+      <ul>
+        <li>6 lessons × 30 min each = 3 hours of learning</li>
+        <li>6 build challenges × 1 hour each = 6 hours of building</li>
+        <li>1 hour buffer for debugging and experimentation</li>
+      </ul>
+      <p class="highlight">End result: Working context layer with Chrome extension + AI integration</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
