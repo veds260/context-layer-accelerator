@@ -6,7 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check for Railway
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Data paths
 const DATA_DIR = path.join(__dirname, 'data');
