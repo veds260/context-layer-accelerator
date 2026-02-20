@@ -7,58 +7,74 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🧠 Context Layer Accelerator</h1>
-      <p class="subtitle">Build a personal context layer for AI</p>
+  <div class="page-wrap">
+    <header class="site-header">
+      <div class="logo">
+        <div class="logo-icon">🧠</div>
+        Context Layer
+      </div>
+      <a href="lessons.html" class="nav-link">All lessons →</a>
     </header>
 
-    <div class="stats-bar">
-      <div class="stat">
-        <span class="stat-value" id="xp">0</span>
-        <span class="stat-label">XP</span>
+    <div class="stats-row">
+      <div class="stat-card accent">
+        <div class="stat-label">XP</div>
+        <div class="stat-value" id="xp">0</div>
       </div>
-      <div class="stat">
-        <span class="stat-value" id="streak">🔥 0</span>
-        <span class="stat-label">Streak</span>
+      <div class="stat-card">
+        <div class="stat-label">Streak</div>
+        <div class="stat-value" id="streak">🔥 0</div>
       </div>
-      <div class="stat">
-        <span class="stat-value" id="progress">0/6</span>
-        <span class="stat-label">Lessons</span>
+      <div class="stat-card">
+        <div class="stat-label">Done</div>
+        <div class="stat-value" id="progress">0/6</div>
       </div>
     </div>
 
-    <div class="next-lesson-card" id="nextLessonCard">
-      <h2>🎯 Continue Learning</h2>
-      <div class="next-lesson" id="nextLesson">
-        Loading...
+    <div class="progress-track">
+      <div class="progress-header">
+        <span class="progress-title">Progress</span>
+        <span class="progress-fraction" id="progressFraction">0 of 6 lessons</span>
       </div>
-      <a href="lessons.html" class="btn btn-primary">Start Learning →</a>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+      </div>
     </div>
 
-    <div class="overview">
-      <h2>📚 Learning Path</h2>
-      <div class="path">
-        <div class="tier">
-          <h3>🏗️ Foundation (Lessons 1-5)</h3>
-          <p>Build the core: embeddings, search, clustering, recommendations, RAG</p>
+    <div class="next-card" id="nextCard">
+      <div class="next-card-label">Up next</div>
+      <div class="next-card-title" id="nextLesson">Loading...</div>
+      <a href="lessons.html" class="btn btn-primary">Start learning →</a>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Learning path</div>
+      <div class="tier-grid">
+        <div class="tier-item">
+          <div class="tier-badge">1-5</div>
+          <div class="tier-text">
+            <h4>Foundation</h4>
+            <p>Embeddings, semantic search, clustering, recommendations, RAG</p>
+          </div>
         </div>
-        <div class="tier">
-          <h3>🔌 Integration (Lesson 6)</h3>
-          <p>Connect to Claude via MCP—your context layer goes universal</p>
+        <div class="tier-item">
+          <div class="tier-badge">6</div>
+          <div class="tier-text">
+            <h4>Integration</h4>
+            <p>Connect your context layer to Claude via MCP</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="time-estimate">
-      <h2>⏱️ Time Investment</h2>
-      <p><strong>~10 hours total</strong> at your 10 hrs/week pace</p>
-      <ul>
-        <li>6 lessons × 30 min each = 3 hours of learning</li>
-        <li>6 build challenges × 1 hour each = 6 hours of building</li>
-        <li>1 hour buffer for debugging and experimentation</li>
+    <div class="section">
+      <div class="section-title">Time investment</div>
+      <ul class="time-list">
+        <li>6 lessons × 30 min = 3 hrs of concepts</li>
+        <li>6 build challenges × 1 hr = 6 hrs of building</li>
+        <li>1 hr buffer for debugging</li>
       </ul>
-      <p class="highlight">End result: Working context layer with Chrome extension + AI integration</p>
+      <p class="highlight-text">End result: working context layer with Chrome extension + AI integration</p>
     </div>
   </div>
 

@@ -3,53 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lessons - Context Layer Accelerator</title>
+  <title>Lessons — Context Layer Accelerator</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="lessons.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <a href="/" class="back-link">← Dashboard</a>
-      <h1>📚 Lessons</h1>
+  <div class="page-wrap">
+    <header class="site-header">
+      <a href="/" class="logo">
+        <div class="logo-icon">🧠</div>
+        Context Layer
+      </a>
+      <div class="header-stats">
+        <span class="mini-stat"><span id="xp">0</span> XP</span>
+        <span class="mini-stat">🔥 <span id="streak">0</span></span>
+      </div>
     </header>
 
-    <div class="stats-bar">
-      <div class="stat">
-        <span class="stat-value" id="xp">0</span>
-        <span class="stat-label">XP</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value" id="streak">🔥 0</span>
-        <span class="stat-label">Streak</span>
-      </div>
-    </div>
+    <div id="whatsNext"></div>
 
-    <div id="whatsNext" class="whats-next">
-      <!-- Filled by JS -->
-    </div>
+    <div id="lessonList" class="lesson-list"></div>
+  </div>
 
-    <div id="lessonList" class="lesson-list">
-      <!-- Filled by JS -->
+  <!-- Lesson modal -->
+  <div id="lessonModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" onclick="closeLesson()"></div>
+    <div class="modal-panel">
+      <button class="modal-close" onclick="closeLesson()" aria-label="Close">✕</button>
+      <div id="lessonContent" class="modal-body"></div>
     </div>
+  </div>
 
-    <!-- Lesson Modal -->
-    <div id="lessonModal" class="modal hidden">
-      <div class="modal-content">
-        <button class="close-btn" onclick="closeLesson()">&times;</button>
-        <div id="lessonContent">
-          <!-- Lesson content here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Completion Modal -->
-    <div id="completionModal" class="modal hidden">
-      <div class="modal-content completion">
-        <div class="confetti">🎉</div>
-        <h2>Lesson Complete!</h2>
-        <p class="xp-gained">+<span id="xpGained">100</span> XP</p>
-        <p class="badge-earned">Badge: <span id="badgeEarned">🗺️</span></p>
+  <!-- Completion modal -->
+  <div id="completionModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" onclick="closeCompletion()"></div>
+    <div class="modal-panel modal-panel--sm">
+      <div class="completion-inner">
+        <div class="completion-icon">🎉</div>
+        <h2 class="completion-title">Lesson complete</h2>
+        <div class="completion-xp">+<span id="xpGained">100</span> XP</div>
+        <div class="completion-badge">Badge earned: <span id="badgeEarned">🏆</span></div>
         <button class="btn btn-primary" onclick="closeCompletion()">Continue</button>
       </div>
     </div>

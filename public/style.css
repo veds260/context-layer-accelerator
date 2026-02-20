@@ -1,3 +1,20 @@
+:root {
+  --bg: #0d0d0d;
+  --surface: #161616;
+  --surface-2: #1e1e1e;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #7c6bff;
+  --accent-light: #a89fff;
+  --accent-bg: rgba(124, 107, 255, 0.1);
+  --green: #4ade80;
+  --green-bg: rgba(74, 222, 128, 0.1);
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --text-faint: #444;
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,146 +22,317 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  color: #eee;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
-  padding: 2rem;
+  line-height: 1.6;
 }
 
-.container {
-  max-width: 800px;
+.page-wrap {
+  max-width: 680px;
   margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  color: #888;
-  font-size: 1.2rem;
-}
-
-.stats-bar {
+/* ─── Header ─── */
+.site-header {
   display: flex;
-  justify-content: center;
-  gap: 3rem;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
 }
 
-.stat {
-  text-align: center;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--text);
 }
 
-.stat-value {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #4ecdc4;
+.logo-icon {
+  width: 30px;
+  height: 30px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.15s;
+}
+
+.nav-link:hover {
+  color: var(--text);
+}
+
+/* ─── Stats row ─── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
 }
 
 .stat-label {
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  margin-bottom: 0.25rem;
 }
 
-.next-lesson-card {
-  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-  border-radius: 16px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  animation: pulse 2s infinite;
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1.2;
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.01); }
+.stat-card.accent .stat-value {
+  color: var(--accent-light);
 }
 
-.next-lesson-card h2 {
-  margin-bottom: 1rem;
-  color: #1a1a2e;
+/* ─── Progress bar ─── */
+.progress-track {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
-.next-lesson {
-  font-size: 1.3rem;
-  margin-bottom: 1.5rem;
-  color: #1a1a2e;
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+
+.progress-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.progress-fraction {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.progress-bar-bg {
+  height: 5px;
+  background: var(--surface-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+  border-radius: 99px;
+  transition: width 0.6s ease;
+  min-width: 4px;
+}
+
+/* ─── Next lesson card ─── */
+.next-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.next-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+}
+
+.next-card-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--accent-light);
+  margin-bottom: 0.5rem;
+}
+
+.next-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
 .btn {
-  display: inline-block;
-  padding: 1rem 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
   text-decoration: none;
-  font-weight: bold;
-  font-size: 1.1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-primary {
-  background: #1a1a2e;
-  color: #4ecdc4;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  line-height: 1;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0.88;
+  transform: translateY(-1px);
 }
 
-.overview, .time-estimate {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+.btn:active {
+  transform: translateY(0);
 }
 
-.overview h2, .time-estimate h2 {
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── Info sections ─── */
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
   margin-bottom: 1rem;
-  color: #4ecdc4;
 }
 
-.tier {
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
+.tier-grid {
+  display: grid;
+  gap: 0.75rem;
 }
 
-.tier h3 {
-  margin-bottom: 0.5rem;
+.tier-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
-.tier p {
-  color: #aaa;
+.tier-badge {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--accent-bg);
+  border: 1px solid rgba(124, 107, 255, 0.15);
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
 }
 
-.time-estimate ul {
-  margin: 1rem 0 1rem 1.5rem;
-  color: #aaa;
+.tier-text h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+  color: var(--text);
 }
 
-.time-estimate li {
-  margin-bottom: 0.5rem;
+.tier-text p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
-.highlight {
-  color: #4ecdc4;
-  font-weight: bold;
+.time-list {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
 }
 
-/* Completed state */
-.completed .next-lesson-card {
-  background: linear-gradient(135deg, #44a08d 0%, #2d6a5f 100%);
+.time-list li {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  padding-left: 1rem;
+  position: relative;
+}
+
+.time-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--text-faint);
+}
+
+.highlight-text {
+  font-size: 0.83rem;
+  color: var(--accent-light);
+  font-weight: 500;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── All-done state ─── */
+.next-card.all-done::before {
+  background: linear-gradient(90deg, var(--green), #6ee7a0);
+}
+
+.next-card.all-done .next-card-label {
+  color: var(--green);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+  .page-wrap {
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+
+  .stat-card {
+    padding: 0.75rem;
+  }
 }
