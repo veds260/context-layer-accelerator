@@ -168,6 +168,6 @@ app.post('/api/reset', (req, res) => {
   res.json({ success: true });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Context Layer Accelerator running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Context Layer Accelerator running on port ${PORT}`);
 });
