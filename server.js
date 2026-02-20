@@ -22,7 +22,7 @@ console.log('[startup] CWD:', process.cwd());
 console.log('[startup] __dirname:', __dirname);
 
 const DATA_DIR = path.join(__dirname, 'data');
-const LESSONS_FILE = path.join(DATA_DIR, 'lesson-content.json');
+const LESSONS_FILE = path.join(__dirname, 'lesson-content.json'); // root, NOT in data/ volume
 const PROGRESS_FILE = path.join(DATA_DIR, 'progress.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
