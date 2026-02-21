@@ -4,7 +4,8 @@ const BADGES = {
   'clustering-patterns': '🕵️',
   'recommendation-systems': '🎯',
   'rag-basics': '✂️',
-  'mcp-integration': '🔌'
+  'mcp-integration': '🔌',
+  'production-scale': '🏗️'
 };
 
 let lessons = [];
@@ -48,7 +49,7 @@ function renderWhatsNext() {
     container.innerHTML = `
       <div class="whats-next-banner all-done">
         <div class="whats-next-label">All done</div>
-        <p class="whats-next-done-text">You finished all 6 lessons. Time to build the real thing.</p>
+        <p class="whats-next-done-text">You finished all 7 lessons. Time to build the real thing.</p>
       </div>
     `;
   }
@@ -163,6 +164,20 @@ async function openLesson(lessonId) {
         <div class="challenge-xp">Reward: ${lesson.challenge.xp} XP</div>
       </div>
     </div>
+
+    ${lesson.bonusSection ? `
+    <div class="content-section">
+      <div class="content-section-title">${lesson.bonusSection.title}</div>
+      <div class="bonus-table">
+        ${lesson.bonusSection.content.map(row => `
+          <div class="bonus-row">
+            <div class="bonus-scenario">${row.scenario}</div>
+            <div class="bonus-rec">${row.recommendation}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ` : ''}
 
     <button class="complete-btn" onclick="completeLesson()" ${isCompleted ? 'disabled' : ''}>
       ${isCompleted ? '✓ Completed' : 'Mark as complete'}

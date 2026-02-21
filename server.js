@@ -300,6 +300,92 @@ const LESSONS = [
       "preview": "Deploy your MCP server and test it with Claude Desktop. Save a few tweets, then ask Claude 'What did I save about X?' without uploading anything. Magic moment when it just works.",
       "xp": 250
     }
+  },
+  {
+    "id": "production-scale",
+    "level": 7,
+    "title": "The Scale Architect",
+    "subtitle": "The five things that break when your prototype meets real usage",
+    "emoji": "🏗️",
+    "story": "Your context layer works great with 500 saves. Then you hit 5,000. Search slows down. A 10-page article you saved returns weird, half-relevant results because you stored it as one giant blob. Costs start creeping up. You realize the prototype patterns don't hold. This is the lesson every team building with AI hits eventually — and the one most tutorials skip entirely.",
+    "hook": "What actually breaks when your prototype meets reality?",
+    "concept": "Your context layer prototype does one thing: embed content and search it. That works fine up to a few hundred items. Beyond that, five problems appear:\n\n1. Chunking — long articles stored as one blob return garbage. A question about paragraph 8 matches paragraph 1 because the whole article gets one average embedding.\n\n2. Hybrid search — semantic search misses exact names, dates, and codes. Searching 'email from John Smith' needs keyword matching, not vibes.\n\n3. Reranking — your fast search returns the top 20 candidates. A reranker picks the best 5 with much higher precision.\n\n4. Caching — the same query shouldn't hit the embedding API twice. Cache both the embeddings and the search results.\n\n5. Cost tracking — 1,000 saves per day adds up. Small leaks become real bills.\n\nNone of these are advanced — they're just the gap between a demo and something you actually use every day.",
+    "analogy": "A prototype context layer is like cooking at home. Production is running a restaurant. Same recipes, completely different problems: consistent quality, not wasting ingredients, managing costs, handling 100x the volume. The cooking skills transfer, but you need new operational habits on top.",
+    "visual": "    PROTOTYPE (works fine at 500 items)\n    User query → embed → search everything → return top 5\n    \n    PRODUCTION (works at 50,000 items)\n    \n    User query\n        │\n        ▼\n    Check cache ──── Hit? Return instantly (free)\n        │ Miss\n        ▼\n    Hybrid search ── Semantic meaning + exact keywords\n        │\n        ▼\n    Get top 50 ───── Fast, approximate\n        │\n        ▼\n    Rerank to 5 ──── Slower but precise\n        │\n        ▼\n    Return + cache for next time",
+    "interactive": [
+      {
+        "type": "code",
+        "title": "Smart Chunking",
+        "description": "Split long content by meaning, not character count",
+        "code": "from langchain.text_splitter import RecursiveCharacterTextSplitter\n\ndef smart_chunk(content, content_type='article'):\n    \"\"\"Different content types need different chunk sizes\"\"\"\n    \n    configs = {\n        'tweet':   {'chunk_size': 512,  'overlap': 0},\n        'article': {'chunk_size': 1000, 'overlap': 200},\n        'pdf':     {'chunk_size': 1500, 'overlap': 300},\n        'thread':  {'chunk_size': 800,  'overlap': 100},\n    }\n    \n    config = configs.get(content_type, configs['article'])\n    \n    splitter = RecursiveCharacterTextSplitter(\n        chunk_size=config['chunk_size'],\n        chunk_overlap=config['overlap'],  # Overlap keeps context at boundaries\n        separators=['\\n\\n', '\\n', '. ', ' ']\n    )\n    \n    chunks = splitter.split_text(content)\n    \n    return [{\n        'text': chunk,\n        'chunk_index': i,\n        'total_chunks': len(chunks)\n    } for i, chunk in enumerate(chunks)]\n\n# A 5,000-word article becomes ~5-6 searchable chunks\narticle = fetch_article(url)\nchunks = smart_chunk(article, 'article')\n\nfor chunk in chunks:\n    chunk['embedding'] = get_embedding(chunk['text'])\n    save_to_db(chunk)  # Each chunk is independently searchable",
+        "explanation": "Overlap is the key insight. Without it, a question about the end of paragraph 2 misses context from paragraph 1. The 200-character overlap bridges that gap."
+      },
+      {
+        "type": "code",
+        "title": "Hybrid Search",
+        "description": "Combine semantic similarity with exact keyword matching",
+        "code": "from rank_bm25 import BM25Okapi\nimport numpy as np\n\nclass HybridSearcher:\n    def __init__(self, documents):\n        tokenized = [doc['text'].lower().split() for doc in documents]\n        self.bm25 = BM25Okapi(tokenized)  # Keyword index\n        self.documents = documents\n    \n    def search(self, query, top_k=10, semantic_weight=0.7):\n        # Semantic: understands meaning\n        query_emb = get_embedding(query)\n        semantic_scores = np.array([\n            cosine_similarity(query_emb, doc['embedding'])\n            for doc in self.documents\n        ])\n        \n        # Keyword: matches exact words\n        keyword_scores = self.bm25.get_scores(query.lower().split())\n        \n        # Normalize both to 0-1\n        def normalize(arr):\n            rng = arr.max() - arr.min()\n            return (arr - arr.min()) / (rng + 1e-6)\n        \n        combined = (\n            semantic_weight * normalize(semantic_scores) +\n            (1 - semantic_weight) * normalize(keyword_scores)\n        )\n        \n        top = np.argsort(combined)[::-1][:top_k]\n        return [(self.documents[i], combined[i]) for i in top]\n\nsearcher = HybridSearcher(all_documents)\n\n# Abstract concept: lean semantic\nresults = searcher.search('ways to stay focused', semantic_weight=0.8)\n\n# Specific name or term: lean keyword\nresults = searcher.search('email from Sarah Chen', semantic_weight=0.3)",
+        "explanation": "Pure semantic search struggles with names, dates, and codes. Pure keyword search misses meaning. Adjusting the weight lets you get both."
+      },
+      {
+        "type": "code",
+        "title": "Query Caching",
+        "description": "Same query should never hit the API twice",
+        "code": "import hashlib\nfrom datetime import datetime, timedelta\n\nclass QueryCache:\n    def __init__(self, ttl_hours=6):\n        self.cache = {}  # Use Redis in production\n        self.ttl = timedelta(hours=ttl_hours)\n    \n    def _key(self, query):\n        # Normalize: 'Productivity tips' and 'productivity tips ' both hit same cache\n        return hashlib.md5(query.lower().strip().encode()).hexdigest()\n    \n    def get(self, query):\n        entry = self.cache.get(self._key(query))\n        if entry and datetime.now() - entry['ts'] < self.ttl:\n            return entry['results']\n        return None\n    \n    def set(self, query, results):\n        self.cache[self._key(query)] = {'results': results, 'ts': datetime.now()}\n\ncache = QueryCache()\n\ndef search(query):\n    cached = cache.get(query)\n    if cached:\n        return cached  # Free, instant\n    \n    results = hybrid_search(query)  # Actually does the work\n    cache.set(query, results)\n    return results",
+        "explanation": "Users search similar things repeatedly. Once your context layer has 1,000+ saves, caching common queries makes it feel instant."
+      },
+      {
+        "type": "code",
+        "title": "Cost Tracking",
+        "description": "Know what you're spending before it becomes a surprise",
+        "code": "class CostTracker:\n    PRICE_PER_1K_TOKENS = 0.00002  # text-embedding-3-small\n    \n    def __init__(self, daily_limit=1.00):\n        self.today = {'embeddings': 0, 'tokens': 0, 'cost': 0.0}\n        self.daily_limit = daily_limit\n    \n    def track(self, text):\n        tokens = len(text.split()) * 1.3  # rough estimate\n        cost = (tokens / 1000) * self.PRICE_PER_1K_TOKENS\n        \n        self.today['embeddings'] += 1\n        self.today['tokens'] += tokens\n        self.today['cost'] += cost\n        \n        if self.today['cost'] > self.daily_limit:\n            raise Exception(f\"Daily limit hit: ${self.today['cost']:.2f}\")\n    \n    def report(self):\n        return {\n            'embeddings': self.today['embeddings'],\n            'cost_today': f\"${self.today['cost']:.4f}\",\n            'projected_monthly': f\"${self.today['cost'] * 30:.2f}\"\n        }\n\ntracker = CostTracker(daily_limit=1.00)\n\ndef embed_with_tracking(text):\n    tracker.track(text)\n    return get_embedding(text)\n\nprint(tracker.report())\n# {'embeddings': 156, 'cost_today': '$0.0047', 'projected_monthly': '$0.14'}",
+        "explanation": "For personal use, embedding costs are tiny. But knowing your numbers means no surprises if usage spikes, and you catch runaway loops early."
+      }
+    ],
+    "keyPoints": [
+      "Chunk long content with overlap — one embedding per article loses most of the detail",
+      "Hybrid search handles names and exact terms that semantic search fuzzies out",
+      "Cache queries and embeddings — the same search shouldn't cost twice",
+      "Track costs from day one — tiny per-call costs compound at scale",
+      "You don't need all of this immediately — add each piece when you feel the pain"
+    ],
+    "realWorld": [
+      "Your context layer: chunking means saving a 20-tweet thread and finding the right tweet, not just the thread",
+      "Perplexity: hybrid search + reranking on every single query",
+      "Notion AI: chunks your docs, caches heavily, tracks per-workspace costs",
+      "ChatGPT file uploads: chunked with overlap, reranked before injection into context"
+    ],
+    "easterEgg": "Anthropic published a technique called contextual retrieval where each chunk gets a short summary prepended before embedding. 'The company was founded in 2019' becomes 'From the Apple Inc Wikipedia article: The company was founded in 2019.' This simple change improved retrieval accuracy by 49%. It costs slightly more but is worth it for any collection over 1,000 items.",
+    "challenge": {
+      "unlocks": "production-ready",
+      "preview": "Upgrade your context layer with three things: (1) Add chunking for any saved content over 500 words, (2) Add a query cache with 6-hour TTL, (3) Add a /costs endpoint that returns how many embeddings you've generated today. These three changes take your prototype to something you'd actually trust with real data.",
+      "xp": 300
+    },
+    "bonusSection": {
+      "title": "Which upgrades to add when",
+      "content": [
+        {
+          "scenario": "Under 1,000 saves, just you",
+          "recommendation": "Skip all of this. Basic semantic search in SQLite is fine."
+        },
+        {
+          "scenario": "1,000 to 10,000 saves",
+          "recommendation": "Add chunking and query caching. Consider Chroma as a local vector DB."
+        },
+        {
+          "scenario": "Over 10,000 saves or multiple users",
+          "recommendation": "Pinecone or Weaviate plus hybrid search. This is production territory."
+        },
+        {
+          "scenario": "Searching for names, dates, or codes",
+          "recommendation": "Hybrid search with low semantic weight (0.2 to 0.4)."
+        },
+        {
+          "scenario": "Quality matters more than speed",
+          "recommendation": "Add reranking. It adds 100-200ms but dramatically improves which results surface."
+        }
+      ]
+    }
   }
 ];
 
